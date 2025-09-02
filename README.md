@@ -46,6 +46,7 @@ enum ViewState {
 
 - **ViewController Behavior**:
   - `.loading`: Displays an loader .
+  - `.content`: Display Scene .
   - `.showMessage`: show  Message to user .
   - `.error`: Shows an error UI .
 
@@ -66,14 +67,14 @@ enum ViewState {
 
 
 ## Favorites Persistence
-- Used UserDefaults to store favorite movies instead of Core Data.
-✅ Pros: Lightweight, simple API, fast for small data.
-❌ Cons: Not scalable for complex data, no advanced querying support.
-🎯 Decision: Since favorites are a small dataset, UserDefaults was sufficient.
+  Used UserDefaults to store favorite movies instead of Core Data.
+- ✅ Pros: Lightweight, simple API, fast for small data.
+- ❌ Cons: Not scalable for complex data, no advanced querying support.
+- 🎯 Decision: Since favorites are a small dataset, UserDefaults was sufficient.
 
 
 ## Reactive Programming
-- Chose Combine (native framework) instead of RxSwift.
-✅ Pros: First-party Apple solution, no external dependency, integrates well with Swift.
-❌ Cons: Requires iOS 13+, smaller community compared to RxSwift.
-🎯 Decision: Combine fits the app’s requirements and keeps dependencies minimal.
+ Chose Combine (native framework) instead of RxSwift.
+- ✅ Pros: First-party Apple solution, no external dependency, integrates well with Swift.
+- ❌ Cons: Requires iOS 13+, smaller community compared to RxSwift.
+- 🎯 Decision: Combine fits the app’s requirements and keeps dependencies minimal.

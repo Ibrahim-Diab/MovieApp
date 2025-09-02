@@ -1,5 +1,5 @@
 //
-//  HomeUseCase.swift
+//  MovieListUseCase.swift
 //  MovieExplorer
 //
 //  Created by Diab on 31/08/2025.
@@ -7,13 +7,8 @@
 
 import Combine
 
-protocol HomeUseCaseProtocol {
-    func getMovieData(page:Int) -> AnyPublisher<MovieApiResponse, NetworkError>
-    func makeFavouriteMovie(_ movieId:Int, movies:[MovieDTO]) -> [MovieDTO]
-    func handelMovieData(_ page: Int, lastMovies: [MovieDTO], newMovies: [MovieDTO]) -> [MovieDTO]
-}
 
-final class HomeUseCase: HomeUseCaseProtocol {
+final class MovieListUseCase: MovieListUseCaseProtocol {
     
     private let repository: HomeRepositoryProtocol
     private let favouriteRepository: FavoritesRepositoryProtocol
@@ -49,5 +44,21 @@ final class HomeUseCase: HomeUseCaseProtocol {
             movieItem.isFavourite = favs.contains(movie.id)
             return movieItem
         }
+    }
+    
+    func createMovieDetailsData(data: MovieDTO) -> MovieDetailsDataModel {
+        let movie:MovieDetailsDataModel = .init(
+            id: data.id ,
+            posterURL:data.posterPath.asImageBaseURLString() ,
+            backgroundUrl:data.backdropPath.asImageBaseURLString() ,
+            title: data.title,
+            ratingText: String(format: "%.1f/10", data.voteAverage ?? 0 ),
+            releaseDate: data.releaseDate,
+            isFavorite: data.isFavourite,
+            overview: data.overview,
+            language: data.originalLanguage,
+            voters: "\(data.voteCount  ?? 0) voters"
+        )
+        return movie
     }
 }

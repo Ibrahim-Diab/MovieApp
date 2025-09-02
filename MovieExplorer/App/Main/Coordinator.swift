@@ -5,34 +5,71 @@
 //  Created by Diab on 31/08/2025.
 //
 
+
 import UIKit
 
-public typealias CompletionBlock = (()       -> Void)
+typealias CompletionBlock = (() -> Void)
 
-public protocol Coordinator: AnyObject {
-    func start()
-    func start(with step: Step)
+protocol Coordinator:AnyObject{
+    
     var onCompletion: CompletionBlock? { get set }
+    var childCoordinators :[Coordinator]{ get set }
+    
+    func start()
     func removeDependency(_ coordinator: Coordinator?)
     func addDependency(_ coordinator: Coordinator)
+    func pop()
+    func dismiss()
+    func popToRoot()
+    
 }
 
-public extension Coordinator {
-    func start() { }
-    func start(with step: Step = DefaultStep() ) { }
-    func removeDependency(_ coordinator: Coordinator?) {}
-    func addDependency(_ coordinator: Coordinator) {}
+extension Coordinator{
+    func start( ) { }
+    func pop(){}
+    func dismiss(){}
+    func popToRoot(){}
+    func removeDependency(_ coordinator: Coordinator?) {
+        guard
+            childCoordinators.isEmpty == false,
+            let coordinator = coordinator
+            else { return }
+        
+        for (index, element) in childCoordinators.enumerated() {
+            if element === coordinator {
+                childCoordinators.remove(at: index)
+                break
+            }
+        }
+    }
+    func addDependency(_ coordinator: Coordinator) {
+    for element in childCoordinators {
+        if element === coordinator { return }
+    }
+    childCoordinators.append(coordinator)
+}
 }
 
-public protocol NavigationCoordinator: Coordinator {
+protocol NavigationCoordinator:Coordinator{
     var navigationController: UINavigationController { get }
 }
 
-// MARK: - Step Protocol
+
+extension NavigationCoordinator{
+    func pop() {
+        navigationController.popViewController(animated: true)
+    }
+    func dismiss() {
+        navigationController.dismiss(animated: true)
+    }
+    func popToRoot() {
+        navigationController.popToRootViewController(animated: true)
+    }
+}
+
 public protocol Step { }
 
 public struct DefaultStep: Step {
     public init() { }
 }
-
 

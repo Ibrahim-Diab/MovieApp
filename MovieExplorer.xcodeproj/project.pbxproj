@@ -161,6 +161,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = BVZ9794FDX;
 				GENERATE_INFOPLIST_FILE = YES;
+				IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 				INFOPLIST_FILE = MovieExplorer/Core/Config/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
@@ -190,6 +191,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = BVZ9794FDX;
 				GENERATE_INFOPLIST_FILE = YES;
+				IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 				INFOPLIST_FILE = MovieExplorer/Core/Config/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;

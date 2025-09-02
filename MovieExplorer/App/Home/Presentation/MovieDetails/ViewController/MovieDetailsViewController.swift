@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-final class MovieDetailsViewController: UIViewController {
+final class MovieDetailsViewController: BaseVC {
     
   @IBOutlet private weak var backgroundImageView: UIImageView!
   @IBOutlet private weak var posterImageView: UIImageView!
@@ -21,11 +21,9 @@ final class MovieDetailsViewController: UIViewController {
   @IBOutlet private weak var languageLabel: UILabel!
   @IBOutlet private weak var infoStack: UIStackView!
 
-    private let viewModel: MovieDetailsViewModelType
-    private var stateModel: MovieDetailsState?
-    private var cancellables = Set<AnyCancellable>()
+    private let viewModel: MovieDetailsViewModelProtocol
     
-    init(viewModel: MovieDetailsViewModelType) {
+    init(viewModel: MovieDetailsViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: "MovieDetailsViewController", bundle: nil)
     }
@@ -36,66 +34,70 @@ final class MovieDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
-        bindViewModel()
-        viewModel.viewDidLoad()
+        configuration()
     }
     
     @IBAction private func addToFavoritesWasPressed(_ sender: Any) {
-        guard let stateModel = stateModel else {return}
-        viewModel.favWasPressed(movieId: stateModel.id, isFavourite: !stateModel.isFavorite)
+        viewModel.setItemFavourite()
     }
 }
 
 // MARK: - UISetup
-
 private extension MovieDetailsViewController {
+    
     private func setupUI(){
         title = "Movie Details"
         infoStack.clipsToBounds = true
         infoStack.layer.cornerRadius = 8.0
     }
+    
+    private func configuration(){
+        setupUI()
+        bindViewState()
+        bindMovieData()
+        viewModel.didLoad()
+    }
+    
 }
 
 // MARK: - Binding
 private extension MovieDetailsViewController {
-    func bindViewModel() {
+    
+    
+    func bindMovieData(){
+        viewModel.movieDataPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] movieData in
+                guard let self else {return}
+                configureUI(with: movieData)
+            }.store(in: &viewModel.cancellables)
+    }
+        
+    private func bindViewState(){
         viewModel.viewState
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] state in
-                self?.handleViewState(state)
+            .sink { [weak self] viewState in
+            guard let self = self else {return}
+            switch viewState {
+            case .content:
+                hideIndicator()
+            case .loading:
+                showIndicator()
+            case .error(message: let message):
+                show(errorMessage: message)
             }
-            .store(in: &cancellables)
+        }.store(in: &viewModel.cancellables)
     }
+
     
-    func handleViewState(_ state: MovieDetailsViewState) {
-        switch state {
-        case .loading:
-            showLoadingView()
-        case .error(let message):
-            hideLoadingView()
-                
-        case .populated(let model):
-            hideLoadingView()
-            configureUI(with: model)
-                
-        case .favIsUpdated:
-            hideLoadingView()
-            stateModel?.isFavorite.toggle()
-            favButton.isSelected.toggle()
-            favButton.tintColor = favButton.isSelected ?  .red : .white
-        }
-    }
-    
-    func configureUI(with model: MovieDetailsState) {
-        stateModel = model
+    func configureUI(with model: MovieDetailsDataModel) {
         posterImageView.setWith(model.posterURL)
         backgroundImageView.setWith(model.backgroundUrl)
         nameLabel.text = model.title
         ratingLabel.text = model.ratingText
         dateLabel.text = model.releaseDate
-        favButton.isSelected = model.isFavorite
-        favButton.tintColor = model.isFavorite ? .red : .white
+        favButton.isSelected = model.isFavorite ?? true
+        favButton.tintColor = (model.isFavorite ?? false) ? .red : .white
         overviewLabel.text = model.overview
         languageLabel.text = model.language
         votersLabel.text = model.voters

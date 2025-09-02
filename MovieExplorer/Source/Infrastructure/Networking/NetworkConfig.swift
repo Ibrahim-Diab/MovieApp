@@ -15,4 +15,12 @@ public enum NetworkConfig {
     static var baseUrl: String {
         Bundle.main.object(forInfoDictionaryKey: "API_BASE_URL") as? String ?? ""
     }
+    
+    static var imageBaseUrl: String {
+        Bundle.main.object(forInfoDictionaryKey: "IMAGE_BASE_URL") as? String ?? ""
+    }
 }
+
+
+
+

@@ -78,3 +78,15 @@ enum ViewState {
 - ✅ Pros: First-party Apple solution, no external dependency, integrates well with Swift.
 - ❌ Cons: Requires iOS 13+, smaller community compared to RxSwift.
 - 🎯 Decision: Combine fits the app’s requirements and keeps dependencies minimal.
+
+  ## 📌 Next Sprint Plan
+
+### Features to be implemented:
+-  **Internet Connection Lost Handling**  
+  - Add a dedicated view/banner when the internet connection is lost.  
+  - Provide a retry mechanism when the connection is restored.  
+
+-  **Empty View Handling**  
+  - Display an empty state view when no data is available.  
+  - Use a user-friendly design to clearly communicate the absence of content.  
+

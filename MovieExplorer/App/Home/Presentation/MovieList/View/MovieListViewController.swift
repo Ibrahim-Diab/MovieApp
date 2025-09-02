@@ -37,7 +37,7 @@ class MovieListViewController: BaseVC {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel.didLoad()
+        
     }
     
 }
@@ -51,8 +51,7 @@ extension MovieListViewController{
     }
     
     private func configureNavigation() {
-        navigationItem.title = "Enjoy with Films 🤗 "
-        navigationController?.navigationBar.prefersLargeTitles = true
+        title = "Enjoy with Films 🤗 "
     }
     
     private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout {
@@ -95,11 +94,11 @@ extension MovieListViewController {
         bindViewState()
         configureBinding()
         setupUI()
+        viewModel.didLoad()
     }
         
     private func configureBinding() {
         viewModel.movieDataPublisher
-            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self else { return }
@@ -121,6 +120,8 @@ extension MovieListViewController {
                 showIndicator()
             case .error(message: let message):
                 show(errorMessage: message)
+            case let .showMessage(message):
+                show(successMessage: message)
             }
         }.store(in: &viewModel.cancellables)
     }

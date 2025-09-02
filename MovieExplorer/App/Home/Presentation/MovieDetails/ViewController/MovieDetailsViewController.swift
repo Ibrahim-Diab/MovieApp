@@ -1,8 +1,8 @@
 //
 //  MovieDetailsViewController.swift
-//  MovieApp
+//  MovieExplorer
 //
-//  Created by Rasslan on 26/08/2025.
+//  Created by Diab on 01/09/2025.
 //
 
 import UIKit
@@ -10,17 +10,17 @@ import Combine
 
 final class MovieDetailsViewController: BaseVC {
     
-  @IBOutlet private weak var backgroundImageView: UIImageView!
-  @IBOutlet private weak var posterImageView: UIImageView!
-  @IBOutlet private weak var nameLabel: UILabel!
-  @IBOutlet private weak var ratingLabel: UILabel!
-  @IBOutlet private weak var dateLabel: UILabel!
-  @IBOutlet private weak var favButton: UIButton!
-  @IBOutlet private weak var overviewLabel: UILabel!
-  @IBOutlet private weak var votersLabel: UILabel!
-  @IBOutlet private weak var languageLabel: UILabel!
-  @IBOutlet private weak var infoStack: UIStackView!
-
+    @IBOutlet private weak var backgroundImageView: UIImageView!
+    @IBOutlet private weak var posterImageView: UIImageView!
+    @IBOutlet private weak var nameLabel: UILabel!
+    @IBOutlet private weak var ratingLabel: UILabel!
+    @IBOutlet private weak var dateLabel: UILabel!
+    @IBOutlet private weak var favButton: UIButton!
+    @IBOutlet private weak var overviewLabel: UILabel!
+    @IBOutlet private weak var votersLabel: UILabel!
+    @IBOutlet private weak var languageLabel: UILabel!
+    @IBOutlet private weak var infoStack: UIStackView!
+    
     private let viewModel: MovieDetailsViewModelProtocol
     
     init(viewModel: MovieDetailsViewModelProtocol) {
@@ -72,23 +72,25 @@ private extension MovieDetailsViewController {
                 configureUI(with: movieData)
             }.store(in: &viewModel.cancellables)
     }
-        
+    
     private func bindViewState(){
         viewModel.viewState
             .receive(on: DispatchQueue.main)
             .sink { [weak self] viewState in
-            guard let self = self else {return}
-            switch viewState {
-            case .content:
-                hideIndicator()
-            case .loading:
-                showIndicator()
-            case .error(message: let message):
-                show(errorMessage: message)
-            }
-        }.store(in: &viewModel.cancellables)
+                guard let self = self else {return}
+                switch viewState {
+                case .content:
+                    hideIndicator()
+                case .loading:
+                    showIndicator()
+                case let.error(message):
+                    show(errorMessage: message)
+                case let .showMessage(message):
+                    show(successMessage: message)
+                }
+            }.store(in: &viewModel.cancellables)
     }
-
+    
     
     func configureUI(with model: MovieDetailsDataModel) {
         posterImageView.setWith(model.posterURL)

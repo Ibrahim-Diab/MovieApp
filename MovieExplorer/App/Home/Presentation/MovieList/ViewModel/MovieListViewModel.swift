@@ -62,6 +62,7 @@ final class MovieListViewModel: MovieListViewModelProtocol  {
     }
     
     func favWasPressed(movieId: Int) {
+        useCase.updateStorageFavourite(movieId: movieId)
         movies = useCase.makeFavouriteMovie(movieId, movies: movies)
     }
     
@@ -75,9 +76,16 @@ final class MovieListViewModel: MovieListViewModelProtocol  {
 extension MovieListViewModel{
     func didSelectMovie(index: Int) {
         let movie = useCase.createMovieDetailsData(data: movies[index])
-        self.coordinator?.navigate(to: .movieDetails(data: movie))
+        self.coordinator?.navigate(to: .movieDetails(data: movie, delegate: self))
     }
 }
+
+extension MovieListViewModel:RefreshMovieListProtocol{
+    func updateItemFavouriteInStorage(with movieID:Int) {
+        movies = useCase.makeFavouriteMovie(movieID, movies: movies)
+    }
+}
+
 
 
 

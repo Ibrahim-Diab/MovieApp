@@ -1,8 +1,8 @@
 //
 //  MovieDetailsViewModelProtocol.swift
-//  MovieApp
+//  MovieExplorer
 //
-//  Created by Rasslan on 26/08/2025.
+//  Created by Diab on 01/09/2025.
 //
 
 import Foundation

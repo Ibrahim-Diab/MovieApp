@@ -74,8 +74,8 @@ extension HomeDIContainer: HomeCoordinatorDependencies {
         return vc
     }
     
-    func buildMovieDetailsViewController(data:MovieDetailsDataModel) -> MovieDetailsViewController {
-        let viewModel = MovieDetailsViewModel(useCase: makeMovieDetailsUseCase(), movieData: data)
+    func buildMovieDetailsViewController(data:MovieDetailsDataModel,delegate:RefreshMovieListProtocol) -> MovieDetailsViewController {
+        let viewModel = MovieDetailsViewModel(useCase: makeMovieDetailsUseCase(), movieData: data,movieListDelegate: delegate)
         let vc = MovieDetailsViewController(viewModel: viewModel)
         return vc
     }

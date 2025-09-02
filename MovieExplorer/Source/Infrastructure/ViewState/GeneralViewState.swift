@@ -10,4 +10,5 @@ enum ViewState: Equatable {
     case content
     case loading
     case error(message: String)
+    case showMessage(message: String)
 }

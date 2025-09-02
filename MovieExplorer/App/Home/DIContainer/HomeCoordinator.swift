@@ -36,8 +36,8 @@ class HomeCoordinator: HomeCoordinatorProtocol {
         switch step {
         case .homeInit:
             navigateToHome()
-        case let .movieDetails(data):
-            navigateToMovieDetails(data: data)
+        case let .movieDetails(data,delegate):
+            navigateToMovieDetails(data: data,delegate:delegate)
             
         }
     }
@@ -52,8 +52,8 @@ extension HomeCoordinator {
         
     }
     
-    fileprivate func navigateToMovieDetails(data:MovieDetailsDataModel) {
-        let controller = dependencies.buildMovieDetailsViewController(data: data)
+    fileprivate func navigateToMovieDetails(data:MovieDetailsDataModel, delegate:RefreshMovieListProtocol) {
+        let controller = dependencies.buildMovieDetailsViewController(data: data, delegate: delegate)
         navigationController.pushViewController(controller, animated: true)
     }
 }

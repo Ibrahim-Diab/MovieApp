@@ -15,12 +15,15 @@ protocol HomeCoordinatorProtocol: NavigationCoordinator {
 // MARK: - Coordinator Dependencies
 protocol HomeCoordinatorDependencies {
     func buildMovieListViewController(coordinator: HomeCoordinatorProtocol) -> MovieListViewController
-    func buildMovieDetailsViewController(data:MovieDetailsDataModel) -> MovieDetailsViewController
+    func buildMovieDetailsViewController(data:MovieDetailsDataModel,delegate:RefreshMovieListProtocol) -> MovieDetailsViewController
 }
 
 
 // MARK: - Steps -
  enum HomeStep: Step {
-    case homeInit
-    case movieDetails(data:MovieDetailsDataModel)
+     case homeInit
+     case movieDetails(data:MovieDetailsDataModel,delegate:RefreshMovieListProtocol)
 }
+
+
+

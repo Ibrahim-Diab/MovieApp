@@ -9,7 +9,7 @@ import Combine
 
 
 final class MovieListUseCase: MovieListUseCaseProtocol {
-    
+       
     private let repository: HomeRepositoryProtocol
     private let favouriteRepository: FavoritesRepositoryProtocol
     
@@ -23,15 +23,19 @@ final class MovieListUseCase: MovieListUseCaseProtocol {
         repository.getMovieData(page: page)
     }
     
+    
     func makeFavouriteMovie(_ movieId: Int, movies: [MovieDTO]) -> [MovieDTO] {
         var updatedMovies = movies
         if let index = updatedMovies.firstIndex(where: { $0.id == movieId }) {
             updatedMovies[index].isFavourite.toggle()
-            favouriteRepository.toggleFavorite(id: movieId)
         }
         return updatedMovies
     }
     
+    func updateStorageFavourite(movieId: Int)  {
+        favouriteRepository.toggleFavorite(id: movieId)
+    }
+        
     func handelMovieData(_ page: Int,
                          lastMovies: [MovieDTO],
                          newMovies: [MovieDTO]) -> [MovieDTO] {

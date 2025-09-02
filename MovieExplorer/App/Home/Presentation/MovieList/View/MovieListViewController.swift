@@ -67,10 +67,13 @@ extension MovieListViewController{
         )
         
         let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize:layoutSize ,
-            repeatingSubitem: item,
+            layoutSize: layoutSize,
+            subitem: item,
             count: 2
         )
+        
+        
+        
         let section = NSCollectionLayoutSection(group: group)
         return UICollectionViewCompositionalLayout(section: section)
     }

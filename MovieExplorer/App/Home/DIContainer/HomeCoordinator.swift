@@ -12,7 +12,7 @@ class HomeCoordinator: HomeCoordinatorProtocol {
     var onCompletion: CompletionBlock?
     var navigationController: UINavigationController
     private let dependencies: HomeCoordinatorDependencies
-    private var childCoordinators = [Coordinator]()
+    var childCoordinators = [Coordinator]()
     
     // MARK: - Life Cycle -
     
@@ -27,6 +27,7 @@ class HomeCoordinator: HomeCoordinatorProtocol {
     
     // MARK: - Navigation
     
+    
     func start() {
         navigate(to: .homeInit)
     }
@@ -35,6 +36,9 @@ class HomeCoordinator: HomeCoordinatorProtocol {
         switch step {
         case .homeInit:
             navigateToHome()
+        case let .movieDetails(data,delegate):
+            navigateToMovieDetails(data: data,delegate:delegate)
+            
         }
     }
     
@@ -43,7 +47,13 @@ class HomeCoordinator: HomeCoordinatorProtocol {
 extension HomeCoordinator {
     
     fileprivate func navigateToHome() {
-        let controller = dependencies.buildHomeViewController(coordinator: self)
+        let controller = dependencies.buildMovieListViewController(coordinator: self)
+        navigationController.setViewControllers([controller], animated: true)
+        
+    }
+    
+    fileprivate func navigateToMovieDetails(data:MovieDetailsDataModel, delegate:RefreshMovieListProtocol) {
+        let controller = dependencies.buildMovieDetailsViewController(data: data, delegate: delegate)
         navigationController.pushViewController(controller, animated: true)
     }
 }

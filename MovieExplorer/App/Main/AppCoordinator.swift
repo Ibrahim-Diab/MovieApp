@@ -9,7 +9,8 @@ import UIKit
 
 public class AppCoordinator: Coordinator {
     
-    public var onCompletion: CompletionBlock?
+    var childCoordinators = [Coordinator]()
+    var onCompletion: CompletionBlock?
     
     private let window: UIWindow
     private let appDIContainer: AppDIContainer

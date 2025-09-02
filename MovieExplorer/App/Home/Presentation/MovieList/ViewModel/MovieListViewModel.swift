@@ -1,31 +1,32 @@
 //
-//  HomeViewModel.swift
+//  MovieListViewModel.swift
 //  MovieExplorer
 //
 //  Created by Diab on 1/09/2025.
 //
 
 import Combine
+import Foundation
 
-final class HomeViewModel: HomeViewModelProtocol  {
+final class MovieListViewModel: MovieListViewModelProtocol  {
     
-     ///MARK: - Properites
+    ///MARK: - Properites
     @Published internal var movies: [MovieDTO] = []
     var movieDataPublisher: Published<[MovieDTO]>.Publisher { $movies }
     var cancellables = Set<AnyCancellable>()
     var viewState: PassthroughSubject<ViewState, Never> = .init()
     
-    private let useCase: HomeUseCaseProtocol
+    private let useCase: MovieListUseCaseProtocol
     weak var coordinator: HomeCoordinatorProtocol?
     
     private var currentPage = 1
     private var totalPages = 1
     private var isLoading = false
     
-    init(useCase: HomeUseCaseProtocol,coordinator: HomeCoordinatorProtocol) {
-    self.useCase = useCase
-    self.coordinator = coordinator
-}
+    init(useCase: MovieListUseCaseProtocol,coordinator: HomeCoordinatorProtocol) {
+        self.useCase = useCase
+        self.coordinator = coordinator
+    }
     
     func didLoad() {
         fetchMovies(page: 1)
@@ -61,6 +62,7 @@ final class HomeViewModel: HomeViewModelProtocol  {
     }
     
     func favWasPressed(movieId: Int) {
+        useCase.updateStorageFavourite(movieId: movieId)
         movies = useCase.makeFavouriteMovie(movieId, movies: movies)
     }
     
@@ -69,10 +71,21 @@ final class HomeViewModel: HomeViewModelProtocol  {
     }
 }
 
- //MARK: - Routes -
-extension HomeViewModel{
-    
+//MARK: - Routes -
+
+extension MovieListViewModel{
     func didSelectMovie(index: Int) {
-        print("")
+        let movie = useCase.createMovieDetailsData(data: movies[index])
+        self.coordinator?.navigate(to: .movieDetails(data: movie, delegate: self))
     }
 }
+
+extension MovieListViewModel:RefreshMovieListProtocol{
+    func updateItemFavouriteInStorage(with movieID:Int) {
+        movies = useCase.makeFavouriteMovie(movieID, movies: movies)
+    }
+}
+
+
+
+

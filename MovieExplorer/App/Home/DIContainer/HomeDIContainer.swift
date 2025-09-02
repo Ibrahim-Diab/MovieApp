@@ -23,7 +23,7 @@ class HomeDIContainer {
     // MARK: - Deinit -
     
     deinit {
-        print("HomeDIContainer is deinit, No memory leak found")
+        print("\(Self.self) is deinit, No memory leak found")
     }
     
     // MARK: - Module Coordinator -
@@ -53,8 +53,12 @@ class HomeDIContainer {
         
     // MARK: - UseCase -
     
-    func makeHomeUseCase() -> HomeUseCaseProtocol {
-        return HomeUseCase(repository: homeRepository, favouriteRepository: favouriteRepository)
+    func makeMovieListUseCase() -> MovieListUseCaseProtocol {
+        return MovieListUseCase(repository: homeRepository, favouriteRepository: favouriteRepository)
+    }
+    
+    func makeMovieDetailsUseCase() -> MovieDetailsUseCaseProtocol {
+        return MovieDetailsUseCase(favouriteRepository: favouriteRepository)
     }
     
 }
@@ -63,10 +67,17 @@ class HomeDIContainer {
 
 extension HomeDIContainer: HomeCoordinatorDependencies {
     
-    func buildHomeViewController(coordinator: HomeCoordinatorProtocol) -> HomeVC {
-        let viewModel = HomeViewModel(useCase: makeHomeUseCase(),
+    func buildMovieListViewController(coordinator: HomeCoordinatorProtocol) -> MovieListViewController {
+        let viewModel = MovieListViewModel(useCase: makeMovieListUseCase(),
                                       coordinator: coordinator)
-        return HomeVC(viewModel: viewModel)
+        let vc = MovieListViewController(viewModel: viewModel)
+        return vc
+    }
+    
+    func buildMovieDetailsViewController(data:MovieDetailsDataModel,delegate:RefreshMovieListProtocol) -> MovieDetailsViewController {
+        let viewModel = MovieDetailsViewModel(useCase: makeMovieDetailsUseCase(), movieData: data,movieListDelegate: delegate)
+        let vc = MovieDetailsViewController(viewModel: viewModel)
+        return vc
     }
     
 }
